@@ -7,11 +7,11 @@
 // Execute `rustlings hint errors3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 use std::num::ParseIntError;
 
-fn main() {
+// ()：单元类型（unit type），表示"没有有意义的值返回"
+fn main() ->Result<(),ParseIntError> {
     let mut tokens = 100;
     let pretend_user_input = "8";
 
@@ -23,6 +23,7 @@ fn main() {
         tokens -= cost;
         println!("You now have {} tokens.", tokens);
     }
+    Ok(()) // 表示程序成功执行完毕，没有返回有用值
 }
 
 pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
