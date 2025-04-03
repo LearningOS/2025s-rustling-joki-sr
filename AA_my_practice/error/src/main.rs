@@ -9,9 +9,16 @@
 // Execute `rustlings hint errors6` or use the `hint` watch subcommand for a
 // hint.
 
+// I AM NOT DONE
 // 折腾半小时，不会啊qwq
-// 太牛了
+
 use std::num::ParseIntError;
+
+#[derive(PartialEq, Debug)]
+enum CreationError {
+    Negative,
+    Zero,
+}
 
 // This is a custom error type that we will be using in `parse_pos_nonzero()`.
 #[derive(PartialEq, Debug)]
@@ -34,20 +41,15 @@ impl ParsePosNonzeroError {
 fn parse_pos_nonzero(s: &str) -> Result<PositiveNonzeroInteger, ParsePosNonzeroError> {
     // TODO: change this to return an appropriate error instead of panicking
     // when `parse()` returns an error.
-    let num = s.parse().map_err(ParsePosNonzeroError::from_parseint)?;
-    PositiveNonzeroInteger::new(num).map_err(ParsePosNonzeroError::from_creation)
+    s.parse().map_err(ParsePosNonzeroError::from_parseint)?;
+    PositiveNonzeroInteger::new(s).map_err(ParsePosNonzeroError::from_creation)?;
+
 }
 
 // Don't change anything below this line.
 
 #[derive(PartialEq, Debug)]
 struct PositiveNonzeroInteger(u64);
-
-#[derive(PartialEq, Debug)]
-enum CreationError {
-    Negative,
-    Zero,
-}
 
 impl PositiveNonzeroInteger {
     fn new(value: i64) -> Result<PositiveNonzeroInteger, CreationError> {

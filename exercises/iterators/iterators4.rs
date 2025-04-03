@@ -6,6 +6,9 @@
 // I AM NOT DONE
 
 pub fn factorial(num: u64) -> u64 {
+    let frac = num
+        .fold(1,|frac, i| frac * i);
+    frac
     // Complete this function to return the factorial of num
     // Do not use:
     // - return
