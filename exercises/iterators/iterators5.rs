@@ -11,7 +11,6 @@
 // Execute `rustlings hint iterators5` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 use std::collections::HashMap;
 
@@ -35,7 +34,10 @@ fn count_for(map: &HashMap<String, Progress>, value: Progress) -> usize {
 fn count_iterator(map: &HashMap<String, Progress>, value: Progress) -> usize {
     // map is a hashmap with String keys and Progress values.
     // map = { "variables1": Complete, "from_str": None, ... }
-    todo!();
+    // todo!();
+    map
+        .iter()
+        .fold(0,|acc, (_key, val)|acc + (*val==value) as usize) //bool转换为usize
 }
 
 fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
@@ -54,7 +56,35 @@ fn count_collection_iterator(collection: &[HashMap<String, Progress>], value: Pr
     // collection is a slice of hashmaps.
     // collection = [{ "variables1": Complete, "from_str": None, ... },
     //     { "variables2": Complete, ... }, ... ]
-    todo!();
+    // todo!();
+
+    // // 正确的
+    // let mut sum :usize = 0;
+    // for map in collection{
+    //     sum = sum + map
+    //         .iter()
+    //         .fold(0, |acc, (key, val)|{
+    //             acc + (*val == value) as usize
+    //         });
+    // }
+    // sum
+
+    // //这样写正确
+    // collection
+    //     .iter()//map
+    //     .fold(0,|acc,map|{
+    //         acc + map
+    //                 .iter()
+    //                 .fold(0,|acc_mp,(key,val)|acc_mp + (*val==value) as usize)
+
+    //     })
+
+    //还是正确的:)
+    collection
+        .iter()
+        .flat_map(|x|x.values()) //所有的map的value合到一起
+        .fold(0,|acc,&val|acc + (value==val)as usize)
+        
 }
 
 #[cfg(test)]

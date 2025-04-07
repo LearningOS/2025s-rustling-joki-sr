@@ -18,11 +18,12 @@
 //
 // Execute `rustlings hint box1` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
+
+// 栈上的智能指针，指向堆区数据
 
 #[derive(PartialEq, Debug)]
 pub enum List {
-    Cons(i32, List),
+    Cons(i32, Box<List>),
     Nil,
 }
 
@@ -35,11 +36,15 @@ fn main() {
 }
 
 pub fn create_empty_list() -> List {
-    todo!()
+    // todo!()
+    let list:List = List::Nil;
+    list
 }
 
 pub fn create_non_empty_list() -> List {
-    todo!()
+    // todo!()
+    let list:List = List::Cons(123,Box::new(List::Nil));
+    list
 }
 
 #[cfg(test)]
