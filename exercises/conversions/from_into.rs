@@ -15,6 +15,8 @@ struct Person {
 
 // We implement the Default trait to use it as a fallback
 // when the provided string is not convertible into a Person object
+// 我们实现默认特征以将其用作后备
+// 当提供的字符串不能转换为 Person 对象时
 impl Default for Person {
     fn default() -> Person {
         Person {
@@ -44,6 +46,29 @@ impl Default for Person {
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        if s.is_empty(){
+            return Person::default();
+        }
+
+        // let mut idx=0;
+        // for idx in 0..s.len(){
+        //     if s[idx]==','{
+        //         let name_comma = &s[0..idx];
+        //         let comma_age = &s[idx+1..s.len()];
+        //         return Person{name:name_comma.to_string(), age: comma_age as usize};
+        //     }
+        // }
+
+        let parts:Vec<&str> = s.split(',').collect();
+        if parts.len()==2{
+            let name = parts[0].trim().to_string();
+            let age = parts[1].trim().parse().unwrap_or(6666);
+            if name.is_empty() || age == 6666{
+                return Person::default();
+            }
+        }
+
+        return Person::default();
     }
 }
 

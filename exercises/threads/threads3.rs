@@ -3,7 +3,6 @@
 // Execute `rustlings hint threads3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 use std::sync::mpsc;
 use std::sync::Arc;
@@ -27,14 +26,17 @@ impl Queue {
 }
 
 fn send_tx(q: Queue, tx: mpsc::Sender<u32>) -> () {
-    let qc = Arc::new(q);
+    let qc = Arc::new(q);//原子引用计数
     let qc1 = Arc::clone(&qc);
     let qc2 = Arc::clone(&qc);
 
+    let tx1 = tx.clone();
+    let tx2 = tx.clone();
+
     thread::spawn(move || {
-        for val in &qc1.first_half {
+        for val in &qc1.first_half { //引用前半队列中的每个元素
             println!("sending {:?}", val);
-            tx.send(*val).unwrap();
+            tx1.send(*val).unwrap();
             thread::sleep(Duration::from_secs(1));
         }
     });
@@ -42,17 +44,19 @@ fn send_tx(q: Queue, tx: mpsc::Sender<u32>) -> () {
     thread::spawn(move || {
         for val in &qc2.second_half {
             println!("sending {:?}", val);
-            tx.send(*val).unwrap();
+            tx2.send(*val).unwrap();
             thread::sleep(Duration::from_secs(1));
         }
     });
 }
 
 fn main() {
-    let (tx, rx) = mpsc::channel();
+    let (tx, rx) = mpsc::channel();//multiple producer single consumer
     let queue = Queue::new();
     let queue_length = queue.length;
 
+    // tx在两个线程中被移动使用，但Rust的所有权规则不允许这样做。
+    // mpsc::Sender不能直接被多个线程共享，需要克隆发送端：
     send_tx(queue, tx);
 
     let mut total_received: u32 = 0;
