@@ -42,7 +42,6 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
@@ -63,8 +62,11 @@ impl From<&str> for Person {
         if parts.len()==2{
             let name = parts[0].trim().to_string();
             let age = parts[1].trim().parse().unwrap_or(6666);
+            println!("name:{},age:{}",name,age);
             if name.is_empty() || age == 6666{
                 return Person::default();
+            }else{
+                return Person{name:name,age:age};
             }
         }
 
