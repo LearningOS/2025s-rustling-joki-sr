@@ -27,7 +27,6 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
 
 // Your task is to complete this implementation and return an Ok result of inner
 // type Color. You need to create an implementation for a tuple of three
@@ -37,12 +36,26 @@ enum IntoColorError {
 // time, but the slice implementation needs to check the slice length! Also note
 // that correct RGB color values must be integers in the 0..=255 range.
 
+
+fn check_nnn(n1:i32,n2:i32,n3:i32)->bool{
+    if n1>=0 && n1 <= 255 &&n2>=0 && n2<=255 && n3>=0 && n3<=255{
+        return true;
+    }
+    return false;
+}
 // Tuple implementation
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let n1:i16 = tuple.0;
+        let n2:i16 = tuple.1;
+        let n3:i16 = tuple.2;
+        if check_nnn(n1 as i32,n2.into(),n3.into())==true{
+            return Ok(Color{red:n1 as u8,green:n2 as u8,blue:n3 as u8});
+        }else{
+            return Err(IntoColorError::IntConversion);
+        }
         
-        return Ok(Color(tuple));
     }
 }
 
@@ -50,6 +63,14 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let n1:i16 = arr[0];
+        let n2:i16 = arr[1];
+        let n3:i16 = arr[2];
+        if check_nnn(n1 as i32,n2.into(),n3.into())==true{
+            return Ok(Color{red:n1 as u8,green:n2 as u8,blue:n3 as u8});
+        }else{
+            return Err(IntoColorError::IntConversion);
+        }
     }
 }
 
@@ -57,6 +78,17 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3{
+            return Err(IntoColorError::BadLen);
+        }
+        let n1:i16 = slice[0];
+        let n2:i16 = slice[1];
+        let n3:i16 = slice[2];
+        if check_nnn(n1 as i32,n2.into(),n3.into())==true{
+            return Ok(Color{red:n1 as u8,green:n2 as u8,blue:n3 as u8});
+        }else{
+            return Err(IntoColorError::IntConversion);
+        }
     }
 }
 
