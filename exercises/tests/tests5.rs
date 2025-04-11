@@ -22,7 +22,6 @@
 // Execute `rustlings hint tests5` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 /// # Safety
 ///
@@ -31,8 +30,13 @@ unsafe fn modify_by_address(address: usize) {
     // TODO: Fill your safety notice of the code block below to match your
     // code's behavior and the contract of this function. You may use the
     // comment of the test below as your format reference.
+
+    // SAFETY: The caller guarantees that `address` points to a valid and
+    // mutable `u32` value, as required by the function contract.
     unsafe {
-        todo!("Your code goes here")
+        // todo!("Your code goes here")
+        println!("{}",address);
+        *(address as *mut u32) = 0xAABBCCDD;
     }
 }
 
@@ -45,6 +49,10 @@ mod tests {
         let mut t: u32 = 0x12345678;
         // SAFETY: The address is guaranteed to be valid and contains
         // a unique reference to a `u32` local variable.
+        // as usize，把“指向 t 的裸指针”转换成了它的地址值（通常是内存地址），类型是 usize
+        assert!(t == 0x12345678);
+        // &mut t  这个是 Rust 的可变引用，意思是“我拿到 t 的一个可以修改的引用”。
+        // &mut t as *mut u32 这句是：把引用强转成裸指针
         unsafe { modify_by_address(&mut t as *mut u32 as usize) };
         assert!(t == 0xAABBCCDD);
     }

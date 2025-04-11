@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -45,6 +44,7 @@ impl<T> LinkedList<T> {
     }
 
     pub fn add(&mut self, obj: T) {
+        // println!("added {:?}",obj);
         let mut node = Box::new(Node::new(obj));
         node.next = None;
         let node_ptr = Some(unsafe { NonNull::new_unchecked(Box::into_raw(node)) });
@@ -56,27 +56,74 @@ impl<T> LinkedList<T> {
         self.length += 1;
     }
 
+    //得到LinkedList中的第i个node
+    // 返回结点值的引用
     pub fn get(&mut self, index: i32) -> Option<&T> {
         self.get_ith_node(self.start, index)
     }
 
+    //得到LinkedList中从node开始的第i个节点
     fn get_ith_node(&mut self, node: Option<NonNull<Node<T>>>, index: i32) -> Option<&T> {
         match node {
-            None => None,
+            None => None,//不够长
             Some(next_ptr) => match index {
                 0 => Some(unsafe { &(*next_ptr.as_ptr()).val }),
+                // 如果还没到地方
+                // 
                 _ => self.get_ith_node(unsafe { (*next_ptr.as_ptr()).next }, index - 1),
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	pub fn merge(mut list_a:LinkedList<T>,mut list_b:LinkedList<T>) -> Self
+    where
+        T: PartialOrd + PartialEq + Clone, // 使用 where 语法来添加约束，impl已经定义了T
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		// //TODO
+		// Self {
+        //     length: 0,
+        //     start: None,
+        //     end: None,
+        // }
+        let mut idx1 = 0;
+        let mut idx2 = 0;
+        let mut res = LinkedList::new();
+
+        let mut val1 = list_a.get(idx1);
+        let mut val2 = list_b.get(idx2);
+
+        while(val1.is_some() && val2.is_some()){
+            let n1 = val1.unwrap().clone();
+            let n2 = val2.unwrap().clone();
+
+            if n1 > n2{
+                //put in n2
+                res.add(n2);
+                idx2 += 1;
+                val2 = list_b.get(idx2);
+            }else if n1 < n2{
+                res.add(n1);
+                idx1 += 1;
+                val1 = list_a.get(idx1);
+            }else{
+                res.add(n1);
+                res.add(n2);
+                idx1 += 1;
+                idx2 += 1;
+                val2 = list_b.get(idx2);
+                val1 = list_a.get(idx1);
+            }
         }
+        while let Some(val) = val1{
+            res.add(val.clone());
+            idx1 += 1;
+            val1 = list_a.get(idx1);
+        }
+        while let Some(val)= val2{
+            res.add( val.clone() );
+            idx2 += 1;
+            val2 = list_b.get(idx2);
+        }
+        return res;
 	}
 }
 
