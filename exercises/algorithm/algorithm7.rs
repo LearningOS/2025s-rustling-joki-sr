@@ -3,13 +3,12 @@
 	This question requires you to use a stack to achieve a bracket match
 */
 
-// I AM NOT DONE
 #[derive(Debug)]
 struct Stack<T> {
 	size: usize,
 	data: Vec<T>,
 }
-impl<T> Stack<T> {
+impl<T: Clone> Stack<T> {
 	fn new() -> Self {
 		Self {
 			size: 0,
@@ -32,7 +31,13 @@ impl<T> Stack<T> {
 	}
 	fn pop(&mut self) -> Option<T> {
 		// TODO
-		None
+		if 0 == self.size{
+			return None;
+		}
+		self.size -=1;
+		// Some(self.data[self.size].clone())
+		self.data.pop()
+		// None
 	}
 	fn peek(&self) -> Option<&T> {
 		if 0 == self.size {
@@ -102,7 +107,45 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 fn bracket_match(bracket: &str) -> bool
 {
 	//TODO
-	true
+	let mut stack = Stack::new();
+	for ch in bracket.chars(){
+		// println!("ch is {}",ch);
+		if ch == '(' || ch == '{' || ch == '['{
+			stack.push(ch);
+			println!("pushed {}",ch);
+		}else if ch == ')' || ch == '}' || ch == ']'{
+			println!("meet {}",ch);
+			let top = stack.peek();
+			println!("top is {:?}, stack len is {}",top,stack.size);
+			match top {
+				None=>{
+					println!("falsed1");
+					return false;
+				},
+				Some(&topc)=>{
+					println!("poped {}",topc);
+					stack.pop();
+					println!("stack size: {}",stack.size);
+					if ch==')' && topc=='(' || ch==']'&&topc=='[' || ch=='}'&&topc=='{'{
+						//do nothing
+						
+						
+					}else {
+						println!("falsed2 ch:{} toc:{}",ch,topc);
+
+						return false
+					};
+				},
+			}
+		}
+	}
+	if stack.is_empty(){
+		return true;
+	}else{
+		println!("falsed");
+
+		return false;
+	}
 }
 
 #[cfg(test)]

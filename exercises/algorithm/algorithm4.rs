@@ -3,7 +3,6 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -37,6 +36,54 @@ where
             right: None,
         }
     }
+
+    fn search(& self, value: T) -> bool{
+        if self.value == value{
+            return true;
+        }else if self.value > value{
+            // return self.left.search(value);
+            match self.left.as_ref(){
+                None=>false,
+                Some(left_node)=>left_node.search(value),
+            }
+        }else{
+            // return self.right.search(value);
+            match self.right.as_ref(){
+                None=>false,
+                Some(right_node)=>right_node.search(value),
+            }
+        }
+    }
+    // Insert a node into the tree
+    fn insert(&mut self, value: T) {
+        //TODO
+        
+        // let node_val:T = self.value;
+        if self.value == value{
+            return;
+        }else if self.value > value{
+            // self.left.insert(value);
+            match self.left.as_mut(){
+                None=>{
+                    self.left = Some(Box::new(TreeNode::new(value)));
+                },
+                Some(le_node)=>{ //Some(Box...)
+                    // self.left.insert(value);
+                    le_node.insert(value);
+                }
+            }
+        }else{
+            // self.right.insert(value);
+            match self.right.as_mut() {
+                None => {
+                    self.right = Some(Box::new(TreeNode::new(value)));
+                }
+                Some(ref mut right_node) => {
+                    right_node.insert(value);
+                }
+            }
+        }
+    }
 }
 
 impl<T> BinarySearchTree<T>
@@ -51,24 +98,33 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
+        match &mut self.root {
+            None=>{
+                self.root = Some(Box::new(TreeNode::new(value)));
+            }
+            Some(root_node) => root_node.insert(value),
+        };
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        // true
+        match self.root.as_ref() {
+            Some(node)=>{
+                return node.search(value);
+            },
+            None=> return false,
+        }
     }
 }
 
-impl<T> TreeNode<T>
-where
-    T: Ord,
-{
-    // Insert a node into the tree
-    fn insert(&mut self, value: T) {
-        //TODO
-    }
-}
+// impl<T> TreeNode<T>
+// where
+//     T: Ord,
+// {
+
+// }
 
 
 #[cfg(test)]
